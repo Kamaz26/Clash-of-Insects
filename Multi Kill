@@ -1,0 +1,92 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Multikill : MonoBehaviour
+{
+    private List<GameObject> MultikillList = new List<GameObject>();
+    private Transform Ppos;
+    private bool isPlayingSFX;
+
+    void OnDestroy()
+    {
+        if (MultikillList.Count > 7)
+        {
+            OnDestroyMethod();
+            var PopupPosition = new Vector3(Ppos.position.x, 40, Ppos.position.z);
+            DamagePopup.Create(PopupPosition, 25, false, false);
+            UI_InGame.instance.SetCountText(17);
+            UI_InGame.instance.IncrementPowerUp(15);
+        }
+        else if (MultikillList.Count > 6 && MultikillList.Count < 8)
+        {
+            OnDestroyMethod();
+            var PopupPosition = new Vector3(Ppos.position.x, 40, Ppos.position.z);
+            DamagePopup.Create(PopupPosition, 20, false, false);
+            UI_InGame.instance.SetCountText(13);
+            UI_InGame.instance.IncrementPowerUp(10);
+        }
+        else if (MultikillList.Count > 5 && MultikillList.Count < 7)
+        {
+            OnDestroyMethod();
+            var PopupPosition = new Vector3(Ppos.position.x, 40, Ppos.position.z);
+            DamagePopup.Create(PopupPosition, 18, false, false);
+            UI_InGame.instance.SetCountText(12);
+            UI_InGame.instance.IncrementPowerUp(10);
+        }
+        else if (MultikillList.Count > 4 && MultikillList.Count < 6)
+        {
+            OnDestroyMethod();
+            var PopupPosition = new Vector3(Ppos.position.x, 40, Ppos.position.z);
+            DamagePopup.Create(PopupPosition, 15, false, false);
+            UI_InGame.instance.SetCountText(10);
+            UI_InGame.instance.IncrementPowerUp(10);
+        }
+        else if (MultikillList.Count > 3 && MultikillList.Count < 5)
+        {
+            OnDestroyMethod();
+            var PopupPosition = new Vector3(Ppos.position.x, 40, Ppos.position.z);
+            DamagePopup.Create(PopupPosition, 10, false, false);
+            UI_InGame.instance.SetCountText(6);
+            UI_InGame.instance.IncrementPowerUp(5);
+        }
+        else if (MultikillList.Count > 2 && MultikillList.Count < 4)
+        {
+            OnDestroyMethod();
+            var PopupPosition = new Vector3(Ppos.position.x, 40, Ppos.position.z);
+            DamagePopup.Create(PopupPosition, 6, false, false);
+            UI_InGame.instance.SetCountText(3);
+            UI_InGame.instance.IncrementPowerUp(5);
+        }
+        else if (MultikillList.Count > 1 && MultikillList.Count < 3)
+        {
+            OnDestroyMethod();
+            var PopupPosition = new Vector3(Ppos.position.x, 40, Ppos.position.z);
+            DamagePopup.Create(PopupPosition, 4, false, false);
+            UI_InGame.instance.SetCountText(2);
+            UI_InGame.instance.IncrementPowerUp(5);
+
+        }
+        else if (MultikillList.Count == 0)
+        {
+            AudioManager.instance.PlayEmpty();
+        }
+    }
+
+    private void OnDestroyMethod()
+    {
+        Ppos = GetComponent<Transform>();
+        PlayerPrefs.SetInt("CombosCount", PlayerPrefs.GetInt("CombosCount") + 1);
+        AudioManager.instance.StopSFX(4);
+        AudioManager.instance.PlaySFX(4);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Fly")
+            MultikillList.Add(other.gameObject);
+
+        if (isPlayingSFX == false)
+            AudioManager.instance.PlayFull();
+            isPlayingSFX = true;        
+    }    
+}
